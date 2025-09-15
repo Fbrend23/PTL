@@ -2,27 +2,25 @@
 using CsvHelper.Configuration;
 using System.Globalization;
 using static System.Console;
+using System.Text.RegularExpressions;
 
 namespace PTL
 {
     public partial class Form1 : Form
     {
+        string[] monthLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
         // Représente une ligne du CSV (en-têtes doivent correspondre)
         public record Temperature
         {
+            public string Region { get; init; } = "";
+            public string Country { get; init; } = "";
+            public string State { get; init; } = "";
             public string City { get; init; } = "";
-            public double Jan { get; init; }
-            public double Feb { get; init; }
-            public double Mar { get; init; }
-            public double Apr { get; init; }
-            public double May { get; init; }
-            public double Jun { get; init; }
-            public double Jul { get; init; }
-            public double Aug { get; init; }
-            public double Sep { get; init; }
-            public double Oct { get; init; }
-            public double Nov { get; init; }
-            public double Dec { get; init; }
+            public int Month { get; init; }
+            public int Day { get; init; }
+            public int Year { get; init; }
+            public double AvgTemperature { get; init; }
         }
 
         public Form1()
@@ -34,60 +32,39 @@ namespace PTL
 
         private void formsPlot1_Load(object? sender, EventArgs e)
         {
-            // ⚠️ Utilise Path.Combine si possible (ici c’est un exemple simple)
-            var path = @"C:\Users\pl76tup\Desktop\PTL\PTL\Données\Average Temperature of Cities.csv";
-            if (!File.Exists(path))
-            {
-                MessageBox.Show($"Fichier introuvable:\n{path}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+           
+            var path = @"C:\Users\pl76tup\Desktop\PTL\PTL\Données\city_temperature.csv";
 
-            try
-            {
-                // Configuration CsvHelper un peu plus tolérante
-                var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-                {
-                    HasHeaderRecord = true,
-                    TrimOptions = TrimOptions.Trim,
-                    MissingFieldFound = null, // ignore colonne manquante
-                    BadDataFound = null       // ignore lignes “bizarres”
-                };
 
                 using var reader = new StreamReader(path);
-                using var csv = new CsvReader(reader, csvConfig);
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+                csv.Context.TypeConverterCache.AddConverter<double>(new CelsiusConverter());
                 var records = csv.GetRecords<Temperature>().ToList();
 
-                if (records.Count == 0)
-                {
-                    MessageBox.Show("Le CSV ne contient aucune donnée.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                // Choisis la ville à afficher (ex: la première, ou une ville précise)
-                // var city = records.First(); // première ville du fichier
-                var selectedCityName = records.First().City; // ou "Zurich", "Tokyo", etc.
+                // Choisis la ville à afficher
+                var selectedCityName = records.First().City;
                 var city = records.First(r => r.City == selectedCityName);
 
                 // Construit les Y (températures sur 12 mois)
-                double[] y =
-                {
-                    city.Jan, city.Feb, city.Mar, city.Apr, city.May, city.Jun,
-                    city.Jul, city.Aug, city.Sep, city.Oct, city.Nov, city.Dec
-                };
+                double y = 
+                ;
 
-                // Axe X = 1..12
+                // Axe X
                 double[] x = Enumerable.Range(1, 12).Select(i => (double)i).ToArray();
-
-                // Reset du plot si on recharge
-                formsPlot1.Plot.Clear();
+                formsPlot1.Plot.Axes.Bottom.TickGenerator =
+                 new ScottPlot.TickGenerators.NumericManual(
+                Enumerable.Range(1, 12).Select(i => (double)i).ToArray(),
+                labels: monthLabels
+                 );
+            // Reset du plot si on recharge
+            formsPlot1.Plot.Clear();
 
                 // Ajout de la série
                 var scat = formsPlot1.Plot.Add.Scatter(x, y);
-                scat.Label = city.City;    // pour la légende
+                scat.LegendText = city.City;
                 scat.LineWidth = 2;
 
-                // Libellés d’axes + titre simple
-                formsPlot1.Plot.XLabel("Mois (1 = Janvier … 12 = Décembre)");
+                // Libellés d’axes
                 formsPlot1.Plot.YLabel("Température moyenne (°C)");
                 formsPlot1.Plot.Title($"Températures moyennes – {city.City}");
 
@@ -99,16 +76,26 @@ namespace PTL
 
                 // Rafraîchit l’affichage
                 formsPlot1.Refresh();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors du chargement du CSV:\n{ex.Message}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            // (laisse vide si inutilisé)
         }
+
+        public class CelsiusConverter : CsvHelper.TypeConversion.DoubleConverter
+        {
+            public override object? ConvertFromString(string? text, CsvHelper.IReaderRow row, CsvHelper.Configuration.MemberMapData memberMapData)
+            {
+                if (string.IsNullOrWhiteSpace(text))
+                    return double.NaN;
+
+                // Supprime tout ce qui est entre parenthèses (et les parenthèses elles-mêmes)
+                string cleaned = Regex.Replace(text, @"\(.*?\)", "").Trim();
+
+                // Exemple: "11.2 (52.2)" -> "11.2"
+                return double.Parse(cleaned, CultureInfo.InvariantCulture);
+            }
+        }
+
     }
 }
