@@ -52,3 +52,4 @@ _ReSharper*/
 # Other
 *.DS_Store
 Thumbs.db
+/PTL/PTL/bin/Debug
