@@ -1,3 +1,54 @@
 /PTL/.vs
 PTL/Données/city_temperature.csv
 doc/chatgpt.txt
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.csproj.user
+
+# Logs
+*.log
+*.tlog
+
+# Visual Studio specific
+.vs/
+.vscode/
+*.vcxproj.user
+*.vcxproj.filters
+
+# Rider IDE specific
+.idea/
+*.sln.iml
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+*.pid
+*.svclog
+
+# Azure
+*.publishsettings
+*.azurePubxml
+*.azurePubxml.user
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Other
+*.DS_Store
+Thumbs.db
