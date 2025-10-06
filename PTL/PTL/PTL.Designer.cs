@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.formsPlot1 = new ScottPlot.WinForms.FormsPlot();
             this.comboYearFrom = new System.Windows.Forms.ComboBox();
             this.comboYearTo = new System.Windows.Forms.ComboBox();
@@ -37,7 +38,10 @@
             // 
             // formsPlot1
             // 
+            this.formsPlot1.BackColor = System.Drawing.Color.Fuchsia;
+            this.formsPlot1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.formsPlot1.DisplayScale = 1F;
+            this.formsPlot1.ForeColor = System.Drawing.Color.DarkSlateGray;
             this.formsPlot1.Location = new System.Drawing.Point(158, 100);
             this.formsPlot1.Name = "formsPlot1";
             this.formsPlot1.Size = new System.Drawing.Size(630, 338);
@@ -46,6 +50,7 @@
             // 
             // comboYearFrom
             // 
+            this.comboYearFrom.BackColor = System.Drawing.Color.HotPink;
             this.comboYearFrom.FormattingEnabled = true;
             this.comboYearFrom.Location = new System.Drawing.Point(28, 64);
             this.comboYearFrom.Name = "comboYearFrom";
@@ -54,6 +59,7 @@
             // 
             // comboYearTo
             // 
+            this.comboYearTo.BackColor = System.Drawing.Color.HotPink;
             this.comboYearTo.FormattingEnabled = true;
             this.comboYearTo.Location = new System.Drawing.Point(158, 64);
             this.comboYearTo.Name = "comboYearTo";
@@ -62,6 +68,7 @@
             // 
             // checkedListCities
             // 
+            this.checkedListCities.BackColor = System.Drawing.Color.MediumOrchid;
             this.checkedListCities.FormattingEnabled = true;
             this.checkedListCities.Location = new System.Drawing.Point(28, 109);
             this.checkedListCities.Name = "checkedListCities";
@@ -70,24 +77,29 @@
             // 
             // comboGranularity
             // 
+            this.comboGranularity.BackColor = System.Drawing.Color.SeaGreen;
             this.comboGranularity.FormattingEnabled = true;
-            this.comboGranularity.Location = new System.Drawing.Point(416, 70);
+            this.comboGranularity.Location = new System.Drawing.Point(422, 64);
             this.comboGranularity.Name = "comboGranularity";
             this.comboGranularity.Size = new System.Drawing.Size(121, 23);
             this.comboGranularity.TabIndex = 6;
+            this.comboGranularity.SelectedIndexChanged += new System.EventHandler(this.comboGranularity_SelectedIndexChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Fuchsia;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.comboGranularity);
             this.Controls.Add(this.checkedListCities);
             this.Controls.Add(this.comboYearTo);
             this.Controls.Add(this.comboYearFrom);
             this.Controls.Add(this.formsPlot1);
+            this.ForeColor = System.Drawing.Color.Orange;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Plot Thoses Lines";
             this.ResumeLayout(false);
 
         }

@@ -42,3 +42,4 @@ C:\Users\pl76tup\Desktop\PTL\PTL\PTL\obj\Debug\net6.0-windows\refint\PTL.dll
 C:\Users\pl76tup\Desktop\PTL\PTL\PTL\obj\Debug\net6.0-windows\PTL.pdb
 C:\Users\pl76tup\Desktop\PTL\PTL\PTL\obj\Debug\net6.0-windows\PTL.genruntimeconfig.cache
 C:\Users\pl76tup\Desktop\PTL\PTL\PTL\obj\Debug\net6.0-windows\ref\PTL.dll
+C:\Users\pl76tup\Desktop\PTL\PTL\PTL\obj\Debug\net6.0-windows\PTL.Properties.Resources.resources

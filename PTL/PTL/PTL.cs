@@ -10,11 +10,13 @@ using System.Windows.Forms;
 
 namespace PTL
 {
+
     public partial class Form1 : Form
     {
+
         // Libellés de mois (répétés sur toute la timeline)
-        string[] monthLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+        string[] monthLabels = { "Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
+                                 "Jui", "Aou", "Sep", "Oct", "Nov", "Déc" };
 
         public record Temperature
         {
@@ -40,7 +42,6 @@ namespace PTL
             this.Load += formsPlot1_Load;
 
             // === CheckedListBox pour villes ===
-            // (Assure-toi que le contrôle sur le Form s'appelle "checkedListCities")
             checkedListCities.CheckOnClick = true;
             checkedListCities.ItemCheck += checkedListCities_ItemCheck;
 
@@ -50,11 +51,11 @@ namespace PTL
             comboYearFrom.SelectedIndexChanged += Years_SelectedIndexChanged;
             comboYearTo.SelectedIndexChanged += Years_SelectedIndexChanged;
 
-            // Selecteur mois/année
+            // Sélecteur mois/année
             comboGranularity.DropDownStyle = ComboBoxStyle.DropDownList;
             comboGranularity.Items.AddRange(new[] { "Mois", "Année" });
             comboGranularity.SelectedIndex = 0; // par défaut: Mois
-            comboGranularity.SelectedIndexChanged += (s, e) => PlotCurrentSelection();
+            comboGranularity.SelectedIndexChanged += comboGranularity_SelectedIndexChanged;
         }
 
         private void formsPlot1_Load(object? sender, EventArgs e)
@@ -102,12 +103,12 @@ namespace PTL
             // Init années selon sélection
             RefreshYearsForSelection();
             PlotCurrentSelection();
+            
         }
 
-        // Quand on coche/décoche une ville (ItemCheck déclenche AVANT maj de l'état)
+        // Quand on coche/décoche une ville 
         private void checkedListCities_ItemCheck(object? sender, ItemCheckEventArgs e)
         {
-            // On laisse WinForms finir de cocher, puis on met à jour
             BeginInvoke(new Action(() =>
             {
                 RefreshYearsForSelection(preserveSelection: true);
@@ -137,8 +138,8 @@ namespace PTL
         {
             _isUpdatingYears = true;
 
-            int? prevFrom = comboYearFrom.SelectedItem as int?;
-            int? prevTo = comboYearTo.SelectedItem as int?;
+            int? prevFrom = comboYearFrom.SelectedItem is int a ? a : (int?)null;
+            int? prevTo = comboYearTo.SelectedItem is int b ? b : (int?)null;
 
             var selCities = GetSelectedCities();
 
@@ -201,7 +202,22 @@ namespace PTL
                 _isUpdatingYears = false;
             }
 
-            PlotCitiesMonthlyTimeline(selCities, yearFrom, yearTo);
+            // Choix de la granularité (Mois / Année)
+            bool byYear = string.Equals(
+                comboGranularity.SelectedItem?.ToString(),
+                "Année",
+                StringComparison.OrdinalIgnoreCase
+            );
+
+            if (byYear)
+                PlotCitiesYearlyTimeline(selCities, yearFrom, yearTo);
+            else
+                PlotCitiesMonthlyTimeline(selCities, yearFrom, yearTo);
+        }
+
+        private void comboGranularity_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PlotCurrentSelection();
         }
 
         /// <summary>
@@ -282,11 +298,96 @@ namespace PTL
             formsPlot1.Plot.YLabel("Température moyenne (°C)");
             formsPlot1.Plot.Title($"Températures mensuelles – {titleCities} ({yearFrom}–{yearTo})");
             formsPlot1.Plot.Legend.IsVisible = true;
-
+            formsPlot1.Plot.Axes.Color(new("#FFD700"));
             formsPlot1.Plot.Axes.AutoScale();
             formsPlot1.Refresh();
         }
 
+        /// <summary>
+        /// Trace une timeline ANNUELLE de yearFrom à yearTo,
+        /// pour chaque ville cochée (une courbe par ville).
+        /// 1 point par année = moyenne des 12 moyennes mensuelles de l'année.
+        /// </summary>
+        private void PlotCitiesYearlyTimeline(List<string> cities, int yearFrom, int yearTo)
+        {
+            formsPlot1.Plot.Clear();
+            //  Abscisses: une position par année (0..N-1), labels = années
+            int totalYears = (yearTo - yearFrom + 1);
+            double[] x = Enumerable.Range(0, totalYears).Select(i => (double)i).ToArray();
+            string[] yearLabels = Enumerable.Range(yearFrom, totalYears).Select(y => y.ToString()).ToArray();
 
+            //  Ticks d'années avec décimation si nécessaire
+            int step = totalYears <= 15 ? 1 :
+                       totalYears <= 30 ? 2 :
+                       totalYears <= 60 ? 3 : 5;
+
+            var tickPos = new List<double>();
+            var tickLab = new List<string>();
+            for (int i = 0; i < totalYears; i += step)
+            {
+                tickPos.Add(i);
+                tickLab.Add(yearLabels[i]);
+            }
+
+            formsPlot1.Plot.Axes.Bottom.TickGenerator =
+                new ScottPlot.TickGenerators.NumericManual(tickPos.ToArray(), tickLab.ToArray());
+
+            //  Une courbe par ville 
+            foreach (var city in cities)
+            {
+                var rowsCity = _records
+                    .Where(r => string.Equals(r.City, city, StringComparison.OrdinalIgnoreCase)
+                                && r.Year >= yearFrom && r.Year <= yearTo)
+                    .ToList();
+
+                if (rowsCity.Count == 0)
+                    continue;
+
+                // 1) moyenne par (Year, Month)
+                var monthlyMeans = rowsCity
+                    .GroupBy(r => (r.Year, r.Month))
+                    .Select(g => new { Year = g.Key.Year, Mean = g.Average(x => x.AvgTemperature) })
+                    .ToList();
+
+                // 2) moyenne des 12 mois par année
+                var meanByYear = monthlyMeans
+                    .GroupBy(m => m.Year)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Average(m => m.Mean)
+                    );
+
+                var yValues = new double[totalYears];
+                for (int i = 0; i < totalYears; i++)
+                {
+                    int year = yearFrom + i;
+                    yValues[i] = meanByYear.TryGetValue(year, out double avg)
+                        ? avg
+                        : double.NaN;
+
+                }
+
+                var line = formsPlot1.Plot.Add.Scatter(x, yValues);
+                line.LegendText = city + " (annuel)";
+                line.LineWidth = 2;
+            }
+
+            //  Traits verticaux fins pour repères annuels
+            for (int i = 0; i < totalYears; i++)
+            {
+                var vline = formsPlot1.Plot.Add.VerticalLine(i);
+                vline.LineWidth = 1;
+                vline.LinePattern = LinePattern.Dashed;
+            }
+
+            // Titre
+            string titleCities = cities.Count <= 3 ? string.Join(", ", cities) : $"{cities.Count} villes";
+            formsPlot1.Plot.YLabel("Température moyenne (°C)");
+            formsPlot1.Plot.Title($"Températures annuelles – {titleCities} ({yearFrom}–{yearTo})");
+            formsPlot1.Plot.Legend.IsVisible = true;
+
+            formsPlot1.Plot.Axes.AutoScale();
+            formsPlot1.Refresh();
+        }
     }
 }
