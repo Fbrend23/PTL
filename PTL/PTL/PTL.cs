@@ -6,14 +6,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace PTL
 {
-
     public partial class Form1 : Form
     {
-
         // Libellés de mois (répétés sur toute la timeline)
         string[] monthLabels = { "Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
                                  "Jui", "Aou", "Sep", "Oct", "Nov", "Déc" };
@@ -35,10 +34,14 @@ namespace PTL
         // Flag pour éviter de re-tracer pendant les MAJ de listes
         private bool _isUpdatingYears = false;
 
+        // Limiter le nombre de villes cochées
+        private const int MAX_CITIES = 5;
+
         public Form1()
         {
             InitializeComponent();
 
+            // Import CSV
             this.Load += formsPlot1_Load;
 
             // === CheckedListBox pour villes ===
@@ -60,55 +63,25 @@ namespace PTL
 
         private void formsPlot1_Load(object? sender, EventArgs e)
         {
-            var path = @"C:\Users\pl76tup\Desktop\PTL\PTL\Données\city_temperature.csv";
-            if (!File.Exists(path))
-            {
-                MessageBox.Show($"Fichier introuvable:\n{path}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var cfg = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                TrimOptions = TrimOptions.Trim,
-                MissingFieldFound = null,
-                BadDataFound = null,
-            };
-
-            using var reader = new StreamReader(path);
-            using var csv = new CsvReader(reader, cfg);
-            _records = csv.GetRecords<Temperature>().ToList();
-
-            if (_records.Count == 0)
-            {
-                MessageBox.Show("CSV vide.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            // Remplir la liste des villes (tri alpha)
-            var cities = _records.Select(r => r.City)
-                                 .Where(s => !string.IsNullOrWhiteSpace(s))
-                                 .Distinct(StringComparer.OrdinalIgnoreCase)
-                                 .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
-                                 .ToList();
-
             checkedListCities.Items.Clear();
-            foreach (var c in cities)
-                checkedListCities.Items.Add(c, false);
-
-            // Sélection initiale : on coche la première ville si dispo
-            if (checkedListCities.Items.Count > 0)
-                checkedListCities.SetItemChecked(0, true);
-
-            // Init années selon sélection
-            RefreshYearsForSelection();
-            PlotCurrentSelection();
-            
+            formsPlot1.Plot.Clear();
+            formsPlot1.Plot.Title("Clique sur « Importer CSV… » pour commencer");
+            formsPlot1.Refresh();
         }
 
-        // Quand on coche/décoche une ville 
+        // Coche/décoche une ville 
         private void checkedListCities_ItemCheck(object? sender, ItemCheckEventArgs e)
         {
+            // Limite de villes cochées
+            if (MAX_CITIES > 0 && e.NewValue == CheckState.Checked && checkedListCities.CheckedItems.Count >= MAX_CITIES)
+            {
+                e.NewValue = CheckState.Unchecked;
+                MessageBox.Show($"Tu peux sélectionner au maximum {MAX_CITIES} villes.",
+                    "Limite atteinte", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Recalculer années + re-tracer une fois l'état mis à jour
             BeginInvoke(new Action(() =>
             {
                 RefreshYearsForSelection(preserveSelection: true);
@@ -192,7 +165,7 @@ namespace PTL
             if (comboYearFrom.SelectedItem is not int yearFrom) return;
             if (comboYearTo.SelectedItem is not int yearTo) return;
 
-            // Sécurité: force yearFrom <= yearTo
+            // Force yearFrom <= yearTo
             if (yearFrom > yearTo)
             {
                 (yearFrom, yearTo) = (yearTo, yearFrom);
@@ -246,7 +219,7 @@ namespace PTL
             formsPlot1.Plot.Axes.Bottom.TickGenerator =
                 new ScottPlot.TickGenerators.NumericManual(monthTickPos.ToArray(), monthTickLab.ToArray());
 
-            //  Marqueurs annuels (traits verticaux à chaque janvier) 
+            // Repères annuels (traits verticaux à chaque janvier)
             for (int y = 0; y <= (yearTo - yearFrom); y++)
             {
                 double januaryX = y * 12; // position de janvier
@@ -255,7 +228,7 @@ namespace PTL
                 vline.LinePattern = LinePattern.Dashed;
             }
 
-            //  Une courbe par ville 
+            // Une courbe par ville 
             double[] x = Enumerable.Range(0, totalMonths).Select(i => (double)i).ToArray();
 
             foreach (var city in cities)
@@ -293,12 +266,16 @@ namespace PTL
                 line.LineWidth = 2;
             }
 
-            // Titre
-            string titleCities = cities.Count <= 3 ? string.Join(", ", cities) : $"{cities.Count} villes";
+            // Style axes/labels
             formsPlot1.Plot.YLabel("Température moyenne (°C)");
+            formsPlot1.Plot.Axes.Bottom.Label.Text = "Mois";
+            formsPlot1.Plot.Axes.Color(new("#FFD700"));
+
+            // Titre et légende
+            string titleCities = cities.Count <= 3 ? string.Join(", ", cities) : $"{cities.Count} villes";
             formsPlot1.Plot.Title($"Températures mensuelles – {titleCities} ({yearFrom}–{yearTo})");
             formsPlot1.Plot.Legend.IsVisible = true;
-            formsPlot1.Plot.Axes.Color(new("#FFD700"));
+
             formsPlot1.Plot.Axes.AutoScale();
             formsPlot1.Refresh();
         }
@@ -311,12 +288,13 @@ namespace PTL
         private void PlotCitiesYearlyTimeline(List<string> cities, int yearFrom, int yearTo)
         {
             formsPlot1.Plot.Clear();
-            //  Abscisses: une position par année (0..N-1), labels = années
+
+            // Abscisses: une position par année (0..N-1), labels = années
             int totalYears = (yearTo - yearFrom + 1);
             double[] x = Enumerable.Range(0, totalYears).Select(i => (double)i).ToArray();
             string[] yearLabels = Enumerable.Range(yearFrom, totalYears).Select(y => y.ToString()).ToArray();
 
-            //  Ticks d'années avec décimation si nécessaire
+            // Ticks d'années avec décimation si nécessaire
             int step = totalYears <= 15 ? 1 :
                        totalYears <= 30 ? 2 :
                        totalYears <= 60 ? 3 : 5;
@@ -332,7 +310,7 @@ namespace PTL
             formsPlot1.Plot.Axes.Bottom.TickGenerator =
                 new ScottPlot.TickGenerators.NumericManual(tickPos.ToArray(), tickLab.ToArray());
 
-            //  Une courbe par ville 
+            // Une courbe par ville 
             foreach (var city in cities)
             {
                 var rowsCity = _records
@@ -364,7 +342,6 @@ namespace PTL
                     yValues[i] = meanByYear.TryGetValue(year, out double avg)
                         ? avg
                         : double.NaN;
-
                 }
 
                 var line = formsPlot1.Plot.Add.Scatter(x, yValues);
@@ -372,7 +349,7 @@ namespace PTL
                 line.LineWidth = 2;
             }
 
-            //  Traits verticaux fins pour repères annuels
+            // Repères annuels
             for (int i = 0; i < totalYears; i++)
             {
                 var vline = formsPlot1.Plot.Add.VerticalLine(i);
@@ -380,14 +357,126 @@ namespace PTL
                 vline.LinePattern = LinePattern.Dashed;
             }
 
-            // Titre
-            string titleCities = cities.Count <= 3 ? string.Join(", ", cities) : $"{cities.Count} villes";
+            // Style axes/labels 
             formsPlot1.Plot.YLabel("Température moyenne (°C)");
+            formsPlot1.Plot.Axes.Bottom.Label.Text = "Années";
+            formsPlot1.Plot.Axes.Color(new("#FFD700"));
+
+            // Titre et légende
+            string titleCities = cities.Count <= 3 ? string.Join(", ", cities) : $"{cities.Count} villes";
             formsPlot1.Plot.Title($"Températures annuelles – {titleCities} ({yearFrom}–{yearTo})");
             formsPlot1.Plot.Legend.IsVisible = true;
 
             formsPlot1.Plot.Axes.AutoScale();
             formsPlot1.Refresh();
+        }
+
+        private void btnImportCsv_Click(object sender, EventArgs e)
+        {
+            using var ofd = new OpenFileDialog
+            {
+                Title = "Choisir un fichier CSV",
+                Filter = "Fichiers CSV (*.csv)|*.csv|Tous les fichiers (*.*)|*.*",
+                Multiselect = false
+            };
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    LoadCsv(ofd.FileName);
+                    MessageBox.Show($"Import terminé : {_records.Count} lignes.", "CSV importé",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Échec de l'import : {ex.Message}", "Erreur",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void LoadCsv(string path)
+        {
+            // Lit la 1re ligne pour deviner le séparateur
+            char delimiter = ',';
+            using (var srDetect = new StreamReader(path, Encoding.UTF8, true))
+            {
+                string? firstLine = srDetect.ReadLine();
+                delimiter = GuessDelimiter(firstLine);
+            }
+
+            // Config CsvHelper
+            var cfg = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = delimiter.ToString(),
+                HasHeaderRecord = true,
+                PrepareHeaderForMatch = args => args.Header.Trim(),
+                MissingFieldFound = null,   // ignore champs manquants
+                BadDataFound = null,        // ignore lignes mal formées
+                DetectColumnCountChanges = true
+            };
+
+            // Lecture et mapping vers record Temperature
+            using var reader = new StreamReader(path, Encoding.UTF8, true);
+            using var csv = new CsvReader(reader, cfg);
+
+            _records = csv.GetRecords<Temperature>().ToList();
+
+            // Mets à jour l’UI
+            RefreshUiAfterLoad();
+        }
+
+        private static char GuessDelimiter(string? firstLine)
+        {
+            if (string.IsNullOrEmpty(firstLine)) return ',';
+            int commas = firstLine.Count(c => c == ',');
+            int semis = firstLine.Count(c => c == ';');
+            int tabs = firstLine.Count(c => c == '\t');
+
+            if (semis >= commas && semis >= tabs) return ';';
+            if (tabs >= commas && tabs >= semis) return '\t';
+            return ',';
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboYearTo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RefreshUiAfterLoad()
+        {
+            // Recharger la liste des villes dans la CheckedListBox
+            var cities = _records
+                .Select(r => r.City)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(c => c, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            checkedListCities.BeginUpdate();
+            checkedListCities.Items.Clear();
+            foreach (var c in cities)
+                checkedListCities.Items.Add(c, false);
+
+            // Sélection initiale : cocher la première ville si dispo
+            if (checkedListCities.Items.Count > 0)
+                checkedListCities.SetItemChecked(0, true);
+            checkedListCities.EndUpdate();
+
+            // Met à jour la plage d'années et trace
+            RefreshYearsForSelection();
+            PlotCurrentSelection();
         }
     }
 }

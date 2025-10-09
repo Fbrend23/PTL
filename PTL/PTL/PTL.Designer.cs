@@ -34,11 +34,13 @@
             this.comboYearTo = new System.Windows.Forms.ComboBox();
             this.checkedListCities = new System.Windows.Forms.CheckedListBox();
             this.comboGranularity = new System.Windows.Forms.ComboBox();
+            this.btnImportCsv = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // formsPlot1
             // 
-            this.formsPlot1.BackColor = System.Drawing.Color.Fuchsia;
+            this.formsPlot1.BackColor = System.Drawing.Color.Salmon;
             this.formsPlot1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.formsPlot1.DisplayScale = 1F;
             this.formsPlot1.ForeColor = System.Drawing.Color.DarkSlateGray;
@@ -52,19 +54,22 @@
             // 
             this.comboYearFrom.BackColor = System.Drawing.Color.HotPink;
             this.comboYearFrom.FormattingEnabled = true;
-            this.comboYearFrom.Location = new System.Drawing.Point(28, 64);
+            this.comboYearFrom.Location = new System.Drawing.Point(28, 32);
             this.comboYearFrom.Name = "comboYearFrom";
             this.comboYearFrom.Size = new System.Drawing.Size(121, 23);
             this.comboYearFrom.TabIndex = 3;
+            this.comboYearFrom.Text = "De";
             // 
             // comboYearTo
             // 
             this.comboYearTo.BackColor = System.Drawing.Color.HotPink;
             this.comboYearTo.FormattingEnabled = true;
-            this.comboYearTo.Location = new System.Drawing.Point(158, 64);
+            this.comboYearTo.Location = new System.Drawing.Point(28, 63);
             this.comboYearTo.Name = "comboYearTo";
             this.comboYearTo.Size = new System.Drawing.Size(121, 23);
             this.comboYearTo.TabIndex = 4;
+            this.comboYearTo.Text = "A";
+            this.comboYearTo.SelectedIndexChanged += new System.EventHandler(this.comboYearTo_SelectedIndexChanged);
             // 
             // checkedListCities
             // 
@@ -79,18 +84,45 @@
             // 
             this.comboGranularity.BackColor = System.Drawing.Color.SeaGreen;
             this.comboGranularity.FormattingEnabled = true;
-            this.comboGranularity.Location = new System.Drawing.Point(422, 64);
+            this.comboGranularity.Location = new System.Drawing.Point(370, 63);
             this.comboGranularity.Name = "comboGranularity";
             this.comboGranularity.Size = new System.Drawing.Size(121, 23);
             this.comboGranularity.TabIndex = 6;
             this.comboGranularity.SelectedIndexChanged += new System.EventHandler(this.comboGranularity_SelectedIndexChanged);
             // 
+            // btnImportCsv
+            // 
+            this.btnImportCsv.Font = new System.Drawing.Font("Papyrus", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnImportCsv.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnImportCsv.Location = new System.Drawing.Point(629, 54);
+            this.btnImportCsv.Name = "btnImportCsv";
+            this.btnImportCsv.Size = new System.Drawing.Size(119, 41);
+            this.btnImportCsv.TabIndex = 7;
+            this.btnImportCsv.Text = "Importer CSV";
+            this.btnImportCsv.UseVisualStyleBackColor = true;
+            this.btnImportCsv.Click += new System.EventHandler(this.btnImportCsv_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.Salmon;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox1.Location = new System.Drawing.Point(228, 12);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(385, 32);
+            this.textBox1.TabIndex = 8;
+            this.textBox1.Text = "Température moyenne par ville";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Fuchsia;
+            this.BackColor = System.Drawing.Color.Salmon;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.btnImportCsv);
             this.Controls.Add(this.comboGranularity);
             this.Controls.Add(this.checkedListCities);
             this.Controls.Add(this.comboYearTo);
@@ -101,6 +133,7 @@
             this.Name = "Form1";
             this.Text = "Plot Thoses Lines";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -111,5 +144,7 @@
         private ComboBox comboYearTo;
         private CheckedListBox checkedListCities;
         private ComboBox comboGranularity;
+        private Button btnImportCsv;
+        private TextBox textBox1;
     }
 }
