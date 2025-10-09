@@ -63,6 +63,9 @@ namespace PTL
 
         private void formsPlot1_Load(object? sender, EventArgs e)
         {
+            // Essaie de recharger le CSV mis en cache (%AppData%)
+            if (TryRestoreOnStartup())
+                return;
             checkedListCities.Items.Clear();
             formsPlot1.Plot.Clear();
             formsPlot1.Plot.Title("Clique sur « Importer CSV… » pour commencer");
@@ -385,6 +388,7 @@ namespace PTL
                 try
                 {
                     LoadCsv(ofd.FileName);
+                    PersistImportedCsv(ofd.FileName);
                     MessageBox.Show($"Import terminé : {_records.Count} lignes.", "CSV importé",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -439,11 +443,6 @@ namespace PTL
             return ',';
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
@@ -452,6 +451,52 @@ namespace PTL
         private void comboYearTo_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+        // --------- Persistance dans %AppData% ---------
+        private static string AppDataDir
+        {
+            get
+            {
+                string dir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "PTL", "TemperatureApp");
+                Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
+
+        private static string CachedCsvPath => Path.Combine(AppDataDir, "import.csv");
+
+        /// Sauvegarde le CSV importé dans %AppData% (pour le retrouver au prochain lancement).
+        private void PersistImportedCsv(string originalPath)
+        {
+            try
+            {
+                File.Copy(originalPath, CachedCsvPath, overwrite: true);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("PersistImportedCsv: " + ex.Message);
+            }
+        }
+
+        /// Tente de recharger automatiquement le CSV mis en cache au démarrage.
+        /// Retourne true si un CSV a été restauré.
+        private bool TryRestoreOnStartup()
+        {
+            try
+            {
+                if (File.Exists(CachedCsvPath))
+                {
+                    LoadCsv(CachedCsvPath); // réutilise ta méthode existante
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("TryRestoreOnStartup: " + ex.Message);
+            }
+            return false;
         }
 
         private void RefreshUiAfterLoad()
