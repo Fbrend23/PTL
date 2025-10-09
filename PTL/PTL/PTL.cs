@@ -237,9 +237,9 @@ namespace PTL
             foreach (var city in cities)
             {
                 var rowsCity = _records
-                    .Where(r => string.Equals(r.City, city, StringComparison.OrdinalIgnoreCase)
-                                && r.Year >= yearFrom && r.Year <= yearTo)
+                    .FilterByCitiesAndYears(new[] { city }, yearFrom, yearTo)
                     .ToList();
+
 
                 if (rowsCity.Count == 0)
                     continue;
@@ -407,7 +407,7 @@ namespace PTL
             using (var srDetect = new StreamReader(path, Encoding.UTF8, true))
             {
                 string? firstLine = srDetect.ReadLine();
-                delimiter = GuessDelimiter(firstLine);
+                delimiter = firstLine.GuessCsvDelimiter();
             }
 
             // Config CsvHelper
@@ -431,17 +431,6 @@ namespace PTL
             RefreshUiAfterLoad();
         }
 
-        private static char GuessDelimiter(string? firstLine)
-        {
-            if (string.IsNullOrEmpty(firstLine)) return ',';
-            int commas = firstLine.Count(c => c == ',');
-            int semis = firstLine.Count(c => c == ';');
-            int tabs = firstLine.Count(c => c == '\t');
-
-            if (semis >= commas && semis >= tabs) return ';';
-            if (tabs >= commas && tabs >= semis) return '\t';
-            return ',';
-        }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
