@@ -1,4 +1,9 @@
-﻿using System;
+﻿///ETML
+///Auteur : Brendan Fleurdelys
+///Date : 06.10.2025
+///Description : Utilitaire pour l'importation de CSV
+///
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
