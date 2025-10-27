@@ -8,7 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+///ETML
+///Auteur : Brendan Fleurdelys
+///Date : 25.08.2025
+///Description : Logiciel qui depuis un CSV conforme, affiche un graphique des données sur 
+///la température moyenne de n'importe quelle ville dans le monde
+///
 namespace PTL
 {
     public partial class Form1 : Form
