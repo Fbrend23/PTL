@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "cIvX7rRTZFNsShHeu6ptkKbsu+QYD978U1ILtRk/gNF+ZXmP0o6yXrlBSzepSDcDHKNoU3eymRE4N20tz9twcA==",
+  "dgSpecHash": "JpX7BquZtdt2YNdp5bZWQHlAnOe+6VJGuVGgV65VBQstuoBUkQbi2W1DZ9pj6ATx0Q7d7vEMlghBygCNQVbZZw==",
   "success": true,
   "projectFilePath": "C:\\Users\\pl76tup\\Desktop\\PTL\\PTL\\PTL\\PTL.csproj",
   "expectedPackageFiles": [
@@ -30,7 +30,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Le package 'OpenTK 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
+      "message": "Le package 'OpenTK 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
       "libraryId": "OpenTK",
       "targetGraphs": [
         "net6.0-windows7.0"
@@ -40,7 +40,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Le package 'OpenTK.GLControl 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
+      "message": "Le package 'OpenTK.GLControl 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
       "libraryId": "OpenTK.GLControl",
       "targetGraphs": [
         "net6.0-windows7.0"

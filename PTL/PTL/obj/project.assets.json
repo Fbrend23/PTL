@@ -8,10 +8,14 @@
           "Microsoft.CSharp": "4.7.0"
         },
         "compile": {
-          "lib/netstandard2.1/CsvHelper.dll": {}
+          "lib/netstandard2.1/CsvHelper.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.1/CsvHelper.dll": {}
+          "lib/netstandard2.1/CsvHelper.dll": {
+            "related": ".xml"
+          }
         }
       },
       "HarfBuzzSharp/7.3.0.3": {
@@ -21,10 +25,14 @@
           "HarfBuzzSharp.NativeAssets.macOS": "7.3.0.3"
         },
         "compile": {
-          "lib/net6.0/HarfBuzzSharp.dll": {}
+          "lib/net6.0/HarfBuzzSharp.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/HarfBuzzSharp.dll": {}
+          "lib/net6.0/HarfBuzzSharp.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "HarfBuzzSharp.NativeAssets.Linux/7.3.0.3": {
@@ -119,10 +127,14 @@
           "Microsoft.NETCore.Platforms": "3.1.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {}
+          "ref/netstandard2.0/_._": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {}
+          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll": {
@@ -134,10 +146,14 @@
       "OpenTK/3.1.0": {
         "type": "package",
         "compile": {
-          "lib/net20/OpenTK.dll": {}
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/net20/OpenTK.dll": {}
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "OpenTK.GLControl/3.1.0": {
@@ -146,10 +162,14 @@
           "OpenTK": "3.1.0"
         },
         "compile": {
-          "lib/net20/OpenTK.GLControl.dll": {}
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/net20/OpenTK.GLControl.dll": {}
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "ScottPlot/5.0.56": {
@@ -161,10 +181,14 @@
           "SkiaSharp.NativeAssets.Linux.NoDependencies": "2.88.9"
         },
         "compile": {
-          "lib/net6.0/ScottPlot.dll": {}
+          "lib/net6.0/ScottPlot.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/ScottPlot.dll": {}
+          "lib/net6.0/ScottPlot.dll": {
+            "related": ".xml"
+          }
         }
       },
       "ScottPlot.WinForms/5.0.56": {
@@ -174,10 +198,14 @@
           "SkiaSharp.Views.WindowsForms": "2.88.9"
         },
         "compile": {
-          "lib/net6.0-windows7.0/ScottPlot.WinForms.dll": {}
+          "lib/net6.0-windows7.0/ScottPlot.WinForms.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0-windows7.0/ScottPlot.WinForms.dll": {}
+          "lib/net6.0-windows7.0/ScottPlot.WinForms.dll": {
+            "related": ".xml"
+          }
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WindowsForms"
@@ -190,10 +218,14 @@
           "SkiaSharp.NativeAssets.macOS": "2.88.9"
         },
         "compile": {
-          "lib/net6.0/SkiaSharp.dll": {}
+          "lib/net6.0/SkiaSharp.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/SkiaSharp.dll": {}
+          "lib/net6.0/SkiaSharp.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "SkiaSharp.HarfBuzz/2.88.9": {
@@ -203,10 +235,14 @@
           "SkiaSharp": "2.88.9"
         },
         "compile": {
-          "lib/net6.0/SkiaSharp.HarfBuzz.dll": {}
+          "lib/net6.0/SkiaSharp.HarfBuzz.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/SkiaSharp.HarfBuzz.dll": {}
+          "lib/net6.0/SkiaSharp.HarfBuzz.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "SkiaSharp.NativeAssets.Linux.NoDependencies/2.88.9": {
@@ -284,10 +320,14 @@
           "System.Drawing.Common": "4.7.3"
         },
         "compile": {
-          "lib/netcoreapp3.1/SkiaSharp.Views.Desktop.Common.dll": {}
+          "lib/netcoreapp3.1/SkiaSharp.Views.Desktop.Common.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/netcoreapp3.1/SkiaSharp.Views.Desktop.Common.dll": {}
+          "lib/netcoreapp3.1/SkiaSharp.Views.Desktop.Common.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "SkiaSharp.Views.WindowsForms/2.88.9": {
@@ -299,10 +339,14 @@
           "SkiaSharp.Views.Desktop.Common": "2.88.9"
         },
         "compile": {
-          "lib/netcoreapp3.1/SkiaSharp.Views.WindowsForms.dll": {}
+          "lib/netcoreapp3.1/SkiaSharp.Views.WindowsForms.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/netcoreapp3.1/SkiaSharp.Views.WindowsForms.dll": {}
+          "lib/netcoreapp3.1/SkiaSharp.Views.WindowsForms.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "System.Drawing.Common/4.7.3": {
@@ -312,7 +356,9 @@
           "Microsoft.Win32.SystemEvents": "4.7.0"
         },
         "compile": {
-          "ref/netcoreapp3.0/System.Drawing.Common.dll": {}
+          "ref/netcoreapp3.0/System.Drawing.Common.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
           "lib/netstandard2.0/System.Drawing.Common.dll": {}
@@ -944,6 +990,7 @@
   },
   "packageFolders": {
     "C:\\Users\\pl76tup\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -956,17 +1003,20 @@
       "outputPath": "C:\\Users\\pl76tup\\Desktop\\PTL\\PTL\\PTL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\pl76tup\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0-windows7.0"
+        "net6.0-windows"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -979,6 +1029,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -1000,7 +1055,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -1012,7 +1068,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -1021,7 +1077,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Le package 'OpenTK 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
+      "message": "Le package 'OpenTK 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
       "libraryId": "OpenTK",
       "targetGraphs": [
         "net6.0-windows7.0"
@@ -1031,7 +1087,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Le package 'OpenTK.GLControl 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
+      "message": "Le package 'OpenTK.GLControl 3.1.0' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' au lieu du framework cible du projet 'net6.0-windows7.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
       "libraryId": "OpenTK.GLControl",
       "targetGraphs": [
         "net6.0-windows7.0"
